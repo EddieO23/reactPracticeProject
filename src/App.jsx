@@ -10,14 +10,26 @@ function App() {
     projects: [],
   });
 
-function selectedProjectHandler(id) {
-  setProjectsState((prevState) => {
-    return {
-      ...prevState,
-      selectedProjectId: id,
-    };
-  });
-}
+  function deleteProjectHandler() {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter(
+          (project) => project.id !== prevState.selectedProjectId
+        ),
+      };
+    });
+  }
+
+  function selectedProjectHandler(id) {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: id,
+      };
+    });
+  }
 
   function addProjectHandler() {
     setProjectsState((prevState) => {
@@ -28,14 +40,14 @@ function selectedProjectHandler(id) {
     });
   }
 
-function cancelProjectHandler() {
-  setProjectsState((prevState) => {
-    return {
-      ...prevState,
-      selectedProjectId: undefined,
-    };
-  });
-}
+  function cancelProjectHandler() {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+      };
+    });
+  }
 
   function newProjectHandler(projectData) {
     setProjectsState((prevState) => {
@@ -54,12 +66,16 @@ function cancelProjectHandler() {
   }
 
   // console.log(projectsState)
-  const selectedProject = projectsState.projects.find(project => project.id === projectsState.selectedProjectId )
+  const selectedProject = projectsState.projects.find(
+    (project) => project.id === projectsState.selectedProjectId
+  );
 
-  let content = <SelectedProject project={selectedProject}/>;
+  let content = <SelectedProject project={selectedProject} onDelete={deleteProjectHandler} />;
 
   if (projectsState.selectedProjectId === null) {
-    content = <NewProject onAdd={newProjectHandler} onCancel={cancelProjectHandler} />;
+    content = (
+      <NewProject onAdd={newProjectHandler} onCancel={cancelProjectHandler} />
+    );
   } else if (projectsState.selectedProjectId === undefined) {
     content = <NoProjectSelected onStartAddProject={addProjectHandler} />;
   }
